@@ -1,10 +1,13 @@
+# 导入 Streamlit 库，并使用别名 st
 import streamlit as st
 
-import streamlit as st
-st.set_page_config(page_title='相册网站',page_icon='🐹')
+# 设置网页的基本配置，包括标题和浏览器标签页的图标
+st.set_page_config(page_title='相册网站', page_icon='🐹')
+
+# 定义图片数据列表，每个元素是一个字典，包含图片的URL和标题
 image_ua = [
     {
-        'url': 'https://cn.bing.com/images/search?view=detailV2&ccid=hUHZVg4%2f&id=766F5A6459DAD7CE7C2EA76B68B90E951649875E&thid=OIP.hUHZVg4_yVVS5Spr4Lk7-wHaFb&mediaurl=https%3a%2f%2fpic.nximg.cn%2ffile%2f20240420%2f28864261_235606233126_2.jpg&exph=751&expw=1024&q=%e5%a4%a7%e8%b1%a1&FORM=IRPRST&ck=3E0D80E04BBF3E6E4819F25CA51BE95C&selectedIndex=53&itb=0',
+        'url': 'https://img95.699pic.com/photo/60033/0076.jpg_wh860.jpg',
         'text': '大象'
     },
     {
@@ -12,34 +15,33 @@ image_ua = [
         'text': '长颈鹿'
     },
     {
-        'url': 'https://ts4.tc.mm.bing.net/th/id/OIP-C.0bTOktwCJzRcyLwnpW2algHaFj?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3',
+        'url': 'https://ts1.tc.mm.bing.net/th/id/R-C.3a43bf137b3f55423ae8a5421ddcb31c?rik=ByLfOabJrWDFMw&riu=http%3a%2f%2fp6.qhimg.com%2ft01b1bdb72dcf1217bb.jpg&ehk=ulCmElBs9srg1xHFK341gWOrkFKY9jhnoUgr0OkYX1M%3d&risl=&pid=ImgRaw&r=0',
         'text': '老虎'
     },
 ]
 
-# 初始化索引
+# 初始化会话状态（Session State），用于记录当前显示的图片索引
+# 'ind' 不在 st.session_state 中时，说明是第一次运行，将其初始化为 0
 if 'ind' not in st.session_state:
     st.session_state['ind'] = 0
 
-# --- 修正3: 修正 st.image 的索引逻辑和括号 ---
+# 根据当前索引 'ind'，从列表中获取并显示对应的图片和标题
 st.image(image_ua[st.session_state['ind']]['url'], caption=image_ua[st.session_state['ind']]['text'])
 
-# --- 修正4: 修正函数名拼写错误 st.colums -> st.columns ---
+# 创建一个两列的布局，用于并排放置按钮
 c1, c2 = st.columns(2)
 
 # 定义“下一张”按钮的回调函数
 def nextImg():
+    # 将索引加1，并使用取模运算 (%) 实现循环
+    # 当索引等于列表长度时，会回到 0，实现“最后一张的下一张是第一张”
     st.session_state['ind'] = (st.session_state['ind'] + 1) % len(image_ua)
 
-# --- 修正5: 定义“上一张”按钮的回调函数 ---
-def prevImg():
-    # 确保索引在列表范围内，处理负数索引
-    st.session_state['ind'] = (st.session_state['ind'] - 1 + len(image_ua)) % len(image_ua)
 
-# --- 修正6: 将按钮正确放置在列中，并绑定事件 ---
+# 在第一列中放置“上一张”按钮，点击时调用 prevImg 函数
 with c1:
-    st.button('上一张', use_container_width=True, on_click=prevImg)
+    st.button('上一张', use_container_width=True)
 
+# 在第二列中放置“下一张”按钮，点击时调用 nextImg 函数
 with c2:
     st.button('下一张', use_container_width=True, on_click=nextImg)
-
