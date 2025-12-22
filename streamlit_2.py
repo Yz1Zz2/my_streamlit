@@ -1,59 +1,28 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import datetime
 import random
 
 # 设置页面配置
 st.set_page_config(
     page_title="南宁美食数据仪表盘",
     page_icon="🍜",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
-# 自定义CSS样式
+# 简化的CSS样式
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2.5rem;
-        color: #FF6B35;
         text-align: center;
+        color: #FF6B35;
         margin-bottom: 2rem;
-        font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
     .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1.5rem;
-        border-radius: 15px;
-        color: white;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-    .metric-card:hover {
-        transform: translateY(-5px);
-    }
-    .section-header {
-        font-size: 1.8rem;
-        color: #2D3748;
-        margin: 2rem 0 1rem 0;
-        border-bottom: 3px solid #FF6B35;
-        padding-bottom: 0.5rem;
-        font-weight: 600;
-    }
-    .chart-container {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        background: #f0f2f6;
+        padding: 1rem;
+        border-radius: 10px;
         margin-bottom: 1rem;
-    }
-    .dataframe-container {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -61,7 +30,7 @@ st.markdown("""
 # 标题
 st.markdown('<h1 class="main-header">🍜 南宁美食数据仪表盘</h1>', unsafe_allow_html=True)
 
-# 更新的餐厅数据
+# 餐厅数据
 restaurants_data = {
     "餐厅": ["甘家界牌柠檬鸭", "中山路美食街", "万国酒家", "复记老友粉", "阿光烧烤", 
              "舒记老友", "老友记", "三品王", "梁记卷筒粉", "建政路夜市"],
@@ -87,7 +56,6 @@ def generate_price_trends():
         for i, month in enumerate(months):
             # 模拟季节性价格波动
             seasonal_factor = 1 + 0.1 * np.sin(2 * np.pi * i / 12)
-            # 添加随机波动
             random_factor = 1 + np.random.normal(0, 0.03)
             price = base_price * seasonal_factor * random_factor
             
@@ -147,72 +115,51 @@ else:
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
     st.metric("🏪 餐厅总数", len(df_filtered))
-    st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
     avg_rating = df_filtered['评分'].mean()
     st.metric("⭐ 平均评分", f"{avg_rating:.1f}")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 with col3:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
     avg_price = df_filtered['人均消费(元)'].mean()
     st.metric("💰 平均消费", f"¥{avg_price:.0f}")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 with col4:
-    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
     total_sales = sales_df_filtered['销量'].sum()
     st.metric("📈 总销量", f"{total_sales:,}")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # 主要内容区域
-st.markdown('<h2 class="section-header">📊 数据可视化分析</h2>', unsafe_allow_html=True)
+st.header("📊 数据可视化分析")
 
 # 第一行：柱状图和折线图
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
     st.subheader("📊 餐厅评分对比")
-    # 使用Streamlit内置柱状图
     chart_data = df_filtered.set_index('餐厅')['评分']
     st.bar_chart(chart_data, color="#FF6B35")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
     st.subheader("📈 月度销量趋势")
-    # 使用Streamlit内置折线图
     line_data = sales_df_filtered.pivot(index='月份', columns='餐厅', values='销量')
     st.line_chart(line_data)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # 第二行：面积图和价格走势图
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
     st.subheader("📉 销量面积图")
-    # 使用Streamlit内置面积图
     area_data = sales_df_filtered.groupby('月份')['销量'].sum()
     st.area_chart(area_data, color="#667eea")
-    st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
     st.subheader("💹 12个月价格走势")
-    # 使用Streamlit内置折线图展示价格走势
     price_data = price_df.pivot(index='月份', columns='餐厅', values='价格')
     st.line_chart(price_data)
-    st.markdown('</div>', unsafe_allow_html=True)
 
-# 地图展示（简化版）
-st.markdown('<h2 class="section-header">🗺️ 餐厅地理位置分布</h2>', unsafe_allow_html=True)
-st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+# 地图展示
+st.header("🗺️ 餐厅地理位置分布")
 
 # 创建地图数据
 map_data = df_filtered[['latitude', 'longitude']].rename(columns={
@@ -224,15 +171,12 @@ map_data = df_filtered[['latitude', 'longitude']].rename(columns={
 st.map(map_data, zoom=10, use_container_width=True)
 
 # 添加餐厅信息
-st.write("### 📍 餐厅位置信息")
+st.subheader("📍 餐厅位置信息")
 for _, row in df_filtered.iterrows():
     st.write(f"**{row['餐厅']}** - {row['类型']} | 评分: {row['评分']} | 人均: ¥{row['人均消费(元)']}")
 
-st.markdown('</div>', unsafe_allow_html=True)
-
 # 详细数据表格
-st.markdown('<h2 class="section-header">📋 餐厅详细信息</h2>', unsafe_allow_html=True)
-st.markdown('<div class="dataframe-container">', unsafe_allow_html=True)
+st.header("📋 餐厅详细信息")
 
 # 格式化数据展示
 display_df = df_filtered.copy().rename(columns={
@@ -270,13 +214,12 @@ st.dataframe(
         )
     }
 )
-st.markdown('</div>', unsafe_allow_html=True)
 
 # 页脚
+st.markdown("---")
 st.markdown("""
----
-<div style='text-align: center; color: #718096; margin-top: 2rem; padding: 1rem;'>
-    <p>🍜 南宁美食数据仪表盘 | 数据更新时间：2025年12月22日 09:26</p>
+<div style='text-align: center; color: #718096; margin-top: 1rem;'>
+    <p>🍜 南宁美食数据仪表盘 | 数据更新时间：2025年12月22日 09:28</p>
     <p>探索南宁地道美食，品味壮乡风情 🌟</p>
 </div>
 """, unsafe_allow_html=True)
