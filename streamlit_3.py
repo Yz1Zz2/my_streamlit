@@ -36,11 +36,13 @@ def nextImg():
     # 将索引加1，并使用取模运算 (%) 实现循环
     # 当索引等于列表长度时，会回到 0，实现“最后一张的下一张是第一张”
     st.session_state['ind'] = (st.session_state['ind'] + 1) % len(image_ua)
-
+def prevImg():
+    # 确保索引在列表范围内，处理负数索引
+    st.session_state['ind'] = (st.session_state['ind'] - 1 + len(image_ua)) % len(image_ua)
 
 # 在第一列中放置“上一张”按钮，点击时调用 prevImg 函数
 with c1:
-    st.button('上一张', use_container_width=True)
+    st.button('上一张', use_container_width=True,on_click=prevImg)
 
 # 在第二列中放置“下一张”按钮，点击时调用 nextImg 函数
 with c2:
