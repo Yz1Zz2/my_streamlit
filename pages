@@ -1,1 +1,582 @@
 
+import streamlit as st
+
+# 设置页面配置：标题、布局和图标
+st.set_page_config(page_title="个人简历生成器", layout="wide", page_icon='👨‍🎓')
+
+# 创建两列布局，比例为1:2
+c1, c2 = st.columns([1, 2])
+
+# 左侧列：用户信息输入区域
+with c1:
+    # 姓名输入框
+    user_name = st.text_input("姓名")
+    
+    # 职位输入框
+    user_work = st.text_input("职位")
+    
+    # 手机号输入框
+    user_phone = st.text_input("手机号")
+    
+    # 邮箱输入框
+    user_email = st.text_input("邮箱")
+    
+    # 出生日期选择器
+    user_date = st.date_input("出生日期")
+    
+    # 性别单选按钮，水平排列，默认选择"男"
+    user_sex = st.radio('性别', ['男', '女', '其他'], horizontal=True, index=0)
+    
+    # 学历下拉选择框
+    use_xl = st.selectbox(
+        '学历',
+        ['初中', '中专', '高中', '大专', '本科', '研究生', '博士']
+    )
+    
+    # 语言能力多选框
+    user_language = st.multiselect(
+        '语言能力',
+        ['中文', '英语', '法语', '日语', '俄语', '西班牙语']
+    )
+    
+    # 技能能力多选框
+    user_jineng = st.multiselect(
+        '技能能力',
+        ['Java', 'Python', 'HTML', 'Js', 'Type/Scripts', 'C++']
+    )
+    
+    # 工作经验滑块，范围0-30年
+    use_age = st.slider('工作经验', 0, 30)
+    
+    # 期望薪资范围滑块，范围5000-12000，默认值(6000, 8000)
+    salary_range = st.slider('期望薪资范围', 5000, 12000, (6000, 8000))
+    
+    # 个人简介文本区域
+    user_grjj = st.text_area(label='个人简介：', placeholder='请输入您的个人简介')
+    
+    # 每日最佳联系时间选择器
+    user_time = st.time_input("每日最佳联系时间:")
+    
+    # 头像上传器，支持jpg、jpeg、png、webp格式
+    user_avatar = st.file_uploader(
+        "上传头像",
+        type=['jpg', 'jpeg', 'png', 'webp'],
+        help="支持 jpg, png, webp 格式"
+    )
+
+# 右侧列：简历预览区域
+with c2:
+    # 标题
+    st.header("简历预览")
+    
+    # 如果没有输入姓名，显示提示信息
+    if not user_name:
+        st.info("请在左侧输入信息以生成简历。")
+    else:
+        # 创建头部区域：头像 + 姓名（分为两列）
+        col_avatar, col_title = c2.columns([1, 3])
+        
+        with col_avatar:
+            # 显示上传的头像，如果没有上传则显示默认头像图标
+            if user_avatar is not None:
+                st.image(user_avatar, width=150, use_container_width=False)
+            else:
+                st.markdown("### 👤")
+        
+        with col_title:
+            # 显示姓名
+            st.title(user_name)
+            # 显示职位
+            st.write(f"*{user_work}*")
+        
+        # 分割线
+        st.divider()
+        
+        # 创建两列布局显示基本信息
+        col_a, col_b = c2.columns(2)
+        
+        with col_a:
+            # 显示手机号码
+            st.write(f"**手机号码：** {user_phone}")
+            # 显示电子邮箱
+            st.write(f"**电子邮箱：** {user_email}")
+        
+        with col_b:
+            # 显示性别
+            st.write(f"**性别：** {user_sex}")
+            # 显示出生日期
+            st.write(f"**出生日期：** {user_date}")
+            # 显示最高学历
+            st.write(f"**最高学历：** {use_xl}")
+        
+        # 分割线
+        st.divider()
+        
+        # 个人简介部分
+        st.subheader("个人简介")
+        st.write(user_grjj)
+        
+        # 技能与能力部分
+        st.subheader("技能与能力")
+        # 显示工作经验
+        st.write(f"**工作经验：** {use_age} 年")
+        # 显示期望薪资范围
+        st.write(f"**期望薪资：** {salary_range[0]} - {salary_range[1]} 元")
+        # 显示掌握技能
+        st.write(f"**掌握技能：** {', '.join(user_jineng) if user_jineng else '暂无'}")
+        # 显示语言能力
+        st.write(f"**语言能力：** {', '.join(user_language) if user_language else '暂无'}")
+        
+        # 显示最佳联系时间
+        st.write(f"**最佳联系时间：** {user_time}")
+
+# 导入 Streamlit 库，并使用别名 st
+import streamlit as st
+
+# 设置网页的基本配置，包括标题和浏览器标签页的图标
+st.set_page_config(page_title='音乐网站', page_icon='🐹')
+
+# 定义图片数据列表，每个元素是一个字典，包含图片的URL和标题
+music_data = [
+    {
+        'url': 'https://music.163.com/song/media/outer/url?id=1465082816.mp3',
+        'img': 'http://p1.music.126.net/HqEkuaWZfqnpci4EtxF41w==/109951165163056041.jpg?param=130y130',
+        'text':'专辑封面',
+        'title': '苦海无涯',
+        'artist':'法老 / Yoken_Official',
+        'time':'3:38'
+        
+        
+    },
+    {
+        'url': 'https://music.163.com/song/media/outer/url?id=3329668871.mp3',
+        'img': 'http://p1.music.126.net/qDDB6HshQrqwyKzE9778QA==/109951172450091661.jpg?param=130y130',
+        'text':'专辑封面',
+        'title': '恭喜发财（R&B版）',
+        'artist':'mchaCheers',
+         'time':'3:55'
+    },
+    {
+        'url': 'https://music.163.com/song/media/outer/url?id=3329668871.mp3',
+        'img': 'http://p1.music.126.net/WphIFnDUpf4JhxKTZbRo0A==/109951172454584686.jpg?param=130y130',
+        'text':'专辑封面',
+        'title': '友情提示 (Live)',
+        'artist':'薛之谦',
+         'time':'3:55'
+    },
+]
+
+# 初始化会话状态（Session State），用于记录当前显示的图片索引
+# 'ind' 不在 st.session_state 中时，说明是第一次运行，将其初始化为 0
+if 'ind' not in st.session_state:
+    st.session_state['ind'] = 0
+
+# 获取当前播放的歌曲
+current_song = music_data[st.session_state['ind']]
+
+# 标题和描述
+st.title('🎵 简易音乐播放器')
+
+
+# 创建一个两列的布局，用于并排放置按钮
+c1, c2 = st.columns([1,2])
+
+# 定义“下一张”按钮的回调函数
+def nextImg():
+    # 将索引加1，并使用取模运算 (%) 实现循环
+    # 当索引等于列表长度时，会回到 0，实现“最后一张的下一张是第一张”
+    st.session_state['ind'] = (st.session_state['ind'] + 1) % len(music_data)
+def prevImg():
+    # 确保索引在列表范围内，处理负数索引
+    st.session_state['ind'] = (st.session_state['ind'] - 1 + len(music_data)) % len(music_data)
+
+# 在第一列中放置“上一张”按钮，点击时调用 prevImg 函数
+with c1:
+     st.image(current_song['img'], width=200)  # 显示专辑封面
+     st.text(current_song['text'])
+# 在第二列中放置“下一张”按钮，点击时调用 nextImg 函数
+with c2:
+    st.subheader(f"{current_song['title']}")  # 歌曲标题（加粗）
+    st.text(f"歌手: {current_song['artist']}")  # 歌手信息
+    st.text(f"时长: {current_song['time']}")  # 歌曲时长
+        # 在右列中再创建两列，用于放置“上一首”和“下一首”按钮
+    button_col1, button_col2 = st.columns(2)
+    
+    # “上一首”按钮（左列）
+    with button_col1:
+        st.button('⏮ 上一首', use_container_width=True,on_click=prevImg)  # 绑定 prevImg 回调函数
+    
+    # “下一首”按钮（右列）
+    with button_col2:
+        st.button('⏭ 下一首', use_container_width=True,on_click=nextImg)  # 绑定 nextImg 回调函数
+
+ # 1. 创建一个容器（或列）来包裹音频播放器
+with st.container():
+    st.audio(current_song['url'])  # 音频播放器会自动适应容器宽度
+       
+    
+
+
+import streamlit as st
+import pandas as pd
+import numpy as np
+import random
+
+# 设置页面配置
+st.set_page_config(
+    page_title="南宁美食数据仪表盘",
+    page_icon="🍜",
+    layout="wide"
+)
+
+# 简化的CSS样式
+st.markdown("""
+<style>
+    .main-header {
+        text-align: center;
+        color: #FF6B35;
+        margin-bottom: 2rem;
+    }
+    .metric-card {
+        background: #f0f2f6;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# 标题
+st.markdown('<h1 class="main-header">🍜 南宁美食数据仪表盘</h1>', unsafe_allow_html=True)
+
+# 餐厅数据
+restaurants_data = {
+    "餐厅": ["甘家界牌柠檬鸭", "中山路美食街", "万国酒家", "复记老友粉", "阿光烧烤", 
+             "舒记老友", "老友记", "三品王", "梁记卷筒粉", "建政路夜市"],
+    "类型": ["桂菜", "小吃街", "粤菜", "老友粉", "烧烤", "老友粉", "老友粉", "快餐", "小吃", "夜市"],
+    "评分": [4.6, 4.4, 4.5, 4.3, 4.2, 4.4, 4.1, 4.0, 4.3, 4.5],
+    "人均消费(元)": [68, 35, 88, 18, 45, 20, 16, 25, 12, 30],
+    "latitude": [22.8170, 22.8220, 22.8190, 22.8122, 22.7950, 22.8350, 22.8250, 22.8420, 22.8280, 22.8180],
+    "longitude": [108.3665, 108.3565, 108.3685, 108.2666, 108.3465, 108.3185, 108.3765, 108.3250, 108.3850, 108.3450]
+}
+
+# 创建DataFrame
+df = pd.DataFrame(restaurants_data)
+
+# 生成12个月的价格走势数据
+@st.cache_data
+def generate_price_trends():
+    months = ['1月', '2月', '3月', '4月', '5月', '6月', 
+              '7月', '8月', '9月', '10月', '11月', '12月']
+    
+    price_trends = []
+    for _, restaurant in df.iterrows():
+        base_price = restaurant['人均消费(元)']
+        for i, month in enumerate(months):
+            # 模拟季节性价格波动
+            seasonal_factor = 1 + 0.1 * np.sin(2 * np.pi * i / 12)
+            random_factor = 1 + np.random.normal(0, 0.03)
+            price = base_price * seasonal_factor * random_factor
+            
+            price_trends.append({
+                '餐厅': restaurant['餐厅'],
+                '月份': month,
+                '价格': round(price, 2)
+            })
+    
+    return pd.DataFrame(price_trends)
+
+# 生成月度销售数据
+@st.cache_data
+def generate_monthly_sales():
+    months = ['1月', '2月', '3月', '4月', '5月', '6月', 
+              '7月', '8月', '9月', '10月', '11月', '12月']
+    
+    sales_data = []
+    for _, restaurant in df.iterrows():
+        base_sales = random.randint(1200, 3500)
+        for i, month in enumerate(months):
+            # 模拟销售波动
+            seasonal_factor = 1 + 0.15 * np.sin(2 * np.pi * i / 12 + np.pi/4)
+            random_factor = 1 + np.random.normal(0, 0.1)
+            sales = base_sales * seasonal_factor * random_factor
+            
+            sales_data.append({
+                '餐厅': restaurant['餐厅'],
+                '月份': month,
+                '销量': int(sales)
+            })
+    
+    return pd.DataFrame(sales_data)
+
+# 获取数据
+price_df = generate_price_trends()
+sales_df = generate_monthly_sales()
+
+# 侧边栏筛选
+st.sidebar.title("📊 数据筛选")
+selected_type = st.sidebar.selectbox(
+    "选择餐厅类型",
+    ["全部", "桂菜", "小吃街", "粤菜", "老友粉", "烧烤", "快餐", "小吃", "夜市"]
+)
+
+# 筛选数据
+if selected_type != "全部":
+    df_filtered = df[df['类型'] == selected_type]
+    price_df_filtered = price_df[price_df['餐厅'].isin(df_filtered['餐厅'])]
+    sales_df_filtered = sales_df[sales_df['餐厅'].isin(df_filtered['餐厅'])]
+else:
+    df_filtered = df
+    price_df_filtered = price_df
+    sales_df_filtered = sales_df
+
+# 顶部指标卡片
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.metric("🏪 餐厅总数", len(df_filtered))
+
+with col2:
+    avg_rating = df_filtered['评分'].mean()
+    st.metric("⭐ 平均评分", f"{avg_rating:.1f}")
+
+with col3:
+    avg_price = df_filtered['人均消费(元)'].mean()
+    st.metric("💰 平均消费", f"¥{avg_price:.0f}")
+
+with col4:
+    total_sales = sales_df_filtered['销量'].sum()
+    st.metric("📈 总销量", f"{total_sales:,}")
+
+# 主要内容区域
+st.header("📊 数据可视化分析")
+
+# 第一行：柱状图和折线图
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("📊 餐厅评分对比")
+    chart_data = df_filtered.set_index('餐厅')['评分']
+    st.bar_chart(chart_data, color="#FF6B35")
+
+with col2:
+    st.subheader("📈 月度销量趋势")
+    line_data = sales_df_filtered.pivot(index='月份', columns='餐厅', values='销量')
+    st.line_chart(line_data)
+
+# 第二行：面积图和价格走势图
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("📉 销量面积图")
+    area_data = sales_df_filtered.groupby('月份')['销量'].sum()
+    st.area_chart(area_data, color="#667eea")
+
+with col2:
+    st.subheader("💹 12个月价格走势")
+    price_data = price_df.pivot(index='月份', columns='餐厅', values='价格')
+    st.line_chart(price_data)
+
+# 地图展示
+st.header("🗺️ 餐厅地理位置分布")
+
+# 创建地图数据
+map_data = df_filtered[['latitude', 'longitude']].rename(columns={
+    'latitude': 'lat',
+    'longitude': 'lon'
+})
+
+# 使用Streamlit内置地图
+st.map(map_data, zoom=10, use_container_width=True)
+
+# 添加餐厅信息
+st.subheader("📍 餐厅位置信息")
+for _, row in df_filtered.iterrows():
+    st.write(f"**{row['餐厅']}** - {row['类型']} | 评分: {row['评分']} | 人均: ¥{row['人均消费(元)']}")
+
+# 详细数据表格
+st.header("📋 餐厅详细信息")
+
+# 格式化数据展示
+display_df = df_filtered.copy().rename(columns={
+    '餐厅': '餐厅名称',
+    '类型': '餐厅类型',
+    '评分': '评分',
+    '人均消费(元)': '人均消费(元)',
+    'latitude': '纬度',
+    'longitude': '经度'
+})
+
+st.dataframe(
+    display_df,
+    use_container_width=True,
+    hide_index=True,
+    column_config={
+        "评分": st.column_config.ProgressColumn(
+            "评分",
+            help="餐厅评分（0-5分）",
+            format="%.1f",
+            min_value=0,
+            max_value=5
+        ),
+        "人均消费(元)": st.column_config.NumberColumn(
+            "人均消费",
+            format="¥%d 元"
+        ),
+        "纬度": st.column_config.NumberColumn(
+            "纬度",
+            format="%.6f"
+        ),
+        "经度": st.column_config.NumberColumn(
+            "经度",
+            format="%.6f"
+        )
+    }
+)
+
+# 页脚
+st.markdown("---")
+st.markdown("""
+<div style='text-align: center; color: #718096; margin-top: 1rem;'>
+    <p>🍜 南宁美食数据仪表盘 | 数据更新时间：2025年12月22日 09:28</p>
+    <p>探索南宁地道美食，品味壮乡风情 🌟</p>
+</div>
+""", unsafe_allow_html=True)
+
+import streamlit as st
+st.set_page_config(page_title="视频中心")
+
+
+video_arr=[
+    {
+        'url':'https://www.w3school.com.cn/example/html5/mov_bbb.mp4',
+        'title':'不知名-第一集'
+        },
+        {
+        'url':'https://www.w3schools.com/html/movie.mp4',
+        'title':'不知名-第二集'
+        },
+        {
+        'url':'https://media.w3.org/2010/05/sintel/trailer.mp4',
+        'title':'不知名-第三集'
+        }
+
+    ]
+
+if 'ind' not in st.session_state:
+    st.session_state['ind']=0
+
+st.title(video_arr[st.session_state['ind']]['title'])
+st.video(video_arr[st.session_state['ind']]['url'])
+
+
+def playVideo(e):
+    st.session_state['ind']=int(e)
+
+# 创建与视频数量相等的列（例如3个视频就创建3列）
+cols = st.columns(len(video_arr))
+
+# 遍历每一列，并在每一列中放置一个按钮
+for i, col in enumerate(cols):
+    with col:
+        st.button(f'第{i+1}集',use_container_width=True,on_click=playVideo, args=(i,))
+
+import pandas as pd   # 导入Pandas库，用于数据处理和创建数据框
+import streamlit as st  # 导入Streamlit库，用于创建Web应用
+
+
+# 设置页面主标题 - 学生档案
+st.title("🥇学生 小明2048-数字档案")
+
+# 基础信息部分
+st.header("🔑基础信息")
+st.text("学生ID:STU-2024-005")  # 显示学生ID
+st.markdown("注册时间: :green[2025-12-15]|精神状态：✅正常")  # 显示注册时间和精神状态
+st.markdown("当前教室: :green[教学楼702]|安全等级：🔒机密")  # 显示当前教室和安全等级
+
+# 技能矩阵部分
+st.title("📊技能矩阵")
+
+# 技能掌握度展示
+st.subheader('技能掌握度')
+# 使用三列布局展示不同编程语言的掌握程度
+c1, c2, c3 = st.columns(3)
+c1.metric(label="C语言",help="提示", value="95%", delta="2℃")  # C语言技能，95%掌握度，提升2℃
+c2.metric(label="Pyhon",help="提示",value="86%", delta="6%")  # Python技能，86%掌握度，提升6%
+c3.metric(label="Java",help="提示", value="88%", delta="-9%")  # Java技能，88%掌握度，下降9%
+
+# 定义任务日志数据，用于创建数据框
+data = {
+ '作业提交数':[15, 18, 22, 20, 25],  # 每月作业提交数量
+    '学习时长(小时)':[120, 145, 160, 155, 180],  # 每月学习时长
+    '代码行数':[850, 1200, 1500, 1400, 1800],  # 每月编写代码行数
+}
+# 定义数据框的索引（月份）
+index = pd.Series(['01月', '02月', '03月', '04月', '05月'], name='月份')
+# 根据数据和索引创建数据框
+df = pd.DataFrame(data, index=index)
+
+# Streamlit课程进度部分
+st.title("Streamlit课程进度")
+# 显示进度条，当前进度为15%
+st.progress(15)
+# 显示进度条下方的文字说明
+st.text("Streamlit课程进度")
+
+# 任务日志表格
+st.subheader('任务日志')
+# 使用st.table显示数据框，以表格形式展示任务日志
+st.table(df)
+
+# 最新代码成果部分
+st.subheader('💻最新代码成果')
+# 创建要显示的Python代码块的内容
+python_code = '''<div style="font-weight: bold; color: #333; margin-bottom: 10px;">SYSTEM MESSAGE</div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div>
+                <div style="font-size: 14px; color: #666;">TARGET:</div>
+                <div style="font-size: 16px;">学生档案系统</div>
+            </div>")
+'''
+# 显示代码块，包含行号
+st.code(python_code, line_numbers=True)
+
+# 分隔线
+st.markdown('***')
+
+# 系统状态部分
+st.subheader("📡 系统状态")
+# 显示系统标识
+st.markdown(':green[>> SYSTEM]')
+# 创建一个容器来显示系统消息
+with st.container():
+    # 系统消息框，使用HTML和CSS进行样式设计
+    st.markdown("""
+    <div style="background-color: #f0f2f6; padding: 15px; border-radius: 5px; border: 1px solid #e0e0e0;">
+        <div style="font-weight: bold; color: #333; margin-bottom: 10px;">SYSTEM MESSAGE</div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <div>
+                <div style="font-size: 14px; color: #666;">TARGET:</div>
+                <div style="font-size: 16px;">学生档案系统</div>
+            </div>
+            <div>
+                <div style="font-size: 14px; color: #666;">COUNTDOWN:</div>
+                <div style="font-size: 16px;">2025-06-03 15:24:58</div>
+            </div>
+            <div>
+                <div style="font-size: 14px; color: #666;">系统状态:</div>
+                <div style="font-size: 16px;">在线 连接状态: 已加密</div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                <div style="font-size: 14px; color: #666;">数据同步:</div>
+                <div style="font-size: 16px;">最后同步: 2分钟前</div>
+            </div>
+            <div>
+                <div style="font-size: 14px; color: #666;">安全等级:</div>
+                <div style="font-size: 16px;">高级</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
